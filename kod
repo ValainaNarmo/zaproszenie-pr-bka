@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zaproszenie - Dialog Animowany</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+        width: 100%; height: 100%;
+        overflow: hidden;
+        font-family: "Book Antiqua", serif;
+    }
+    video {
+        position: fixed; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: blur(5px) brightness(0.6);
+        z-index: -1;
+    }
+    .dialog-overlay {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        color: white;
+        text-align: center;
+        font-size: 2em;
+        backdrop-filter: blur(2px);
+        background: rgba(0,0,0,0.3);
+        z-index: 2;
+        padding: 20px;
+    }
+    .dialog-line {
+        margin-bottom: 20px;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+    }
+    .dialog-line.show {
+        opacity: 1;
+    }
+    .next-button {
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border: 2px solid white;
+        border-radius: 30px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s;
+        display: none;
+        margin-top: 20px;
+    }
+    .next-button:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+    .invite {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        max-width: 80%; max-height: 80%;
+        opacity: 0;
+        transition: opacity 0.8s ease, transform 0.8s ease;
+        z-index: 1;
+    }
+    .invite.show {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+</style>
+</head>
+<body>
+
+<video autoplay muted loop>
+    <source src="las.mp4" type="video/mp4">
+    Twoja przeglądarka nie obsługuje wideo.
+</video>
+
+<div class="dialog-overlay" id="dialog">
+    <div class="dialog-line">M: Ej, kurna, co robimy z tym ślubem?</div>
+    <div class="dialog-line">K: Ja bym mogła wziąć z Tobą ślub, ale w lesie.</div>
+    <div class="dialog-line">M: O. Dobra.</div>
+    <div class="dialog-line">Także ten</div>
+    <button class="next-button" id="nextBtn">→ Zobacz co dalej</button>
+</div>
+
+<img src="zaproszenie.jpg" alt="Zaproszenie" class="invite" id="inviteImage">
+
+<script>
+    const dialogLines = document.querySelectorAll('.dialog-line');
+    const nextBtn = document.getElementById('nextBtn');
+    const invite = document.getElementById('inviteImage');
+
+    let currentLine = 0;
+
+    function showNextLine() {
+        if(currentLine < dialogLines.length) {
+            dialogLines[currentLine].classList.add('show');
+            currentLine++;
+            setTimeout(showNextLine, 1200); // czas między linijkami (1.2s)
+        } else {
+            nextBtn.style.display = 'inline-block';
+        }
+    }
+
+    // Start animacji po załadowaniu strony
+    window.addEventListener('load', () => {
+        showNextLine();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        document.getElementById('dialog').style.display = 'none';
+        invite.classList.add('show');
+    });
+</script>
+
+</body>
+</html>
